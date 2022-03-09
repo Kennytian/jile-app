@@ -37,14 +37,6 @@ export abstract class BaseService<T extends Document, P> {
     }
   }
 
-  async findSome1() {
-    try {
-      return await this.baseModel.find({}, { _id: 0 }).exec();
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
-  }
-
   update(id: string, entity: P): Promise<T> {
     try {
       return this.baseModel

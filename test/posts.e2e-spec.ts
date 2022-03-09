@@ -3,7 +3,6 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PostsModule } from '../src/post/posts.module';
-import { exploreApiExcludeControllerMetadata } from '@nestjs/swagger/dist/explorers/api-exclude-controller.explorer';
 
 describe('PostController (e2e)', () => {
   let app: INestApplication;

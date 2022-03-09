@@ -1,4 +1,4 @@
-import { FilterQuery, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BaseService } from '../base/base.service';
