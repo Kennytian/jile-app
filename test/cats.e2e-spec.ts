@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CatsModule } from '../src/cats/cats.module';
 
-describe('AppController (e2e)', () => {
+describe('CatsController (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
@@ -30,29 +30,39 @@ describe('AppController (e2e)', () => {
 
   it('Create a cat', async () => {
     const mockData = {
-      name: `Tom-${Math.floor(Math.random() * 100) + 10}`,
+      name: `Jerry-${Math.floor(Math.random() * 100) + 10}`,
       age: Math.floor(Math.random() * 100) + 10,
-      breed: 'gray',
+      breed: 'brown',
     };
     const response: any = await request(app.getHttpServer())
       .post('/cats')
-      .send(mockData)
-      .set('Accept', 'application/json');
+      .set('Accept', 'application/json')
+      .send(mockData);
     expect(response.status).toEqual(201);
   });
 
   it('Update a cat', async () => {
     const mockData = {
-      id: '6225b21ecaf892f8ea4174ef',
-      name: `Tom${Math.floor(Math.random() * 100) + 10}`,
+      id: '62270f419b073fceb5160687',
+      name: `Tom-${Math.floor(Math.random() * 100) + 10}`,
       age: Math.floor(Math.random() * 100) + 10,
       breed: 'white',
-      tags: ['cute', 'china'],
+      tags: ['cute', 'China'],
     };
     const response = await request(app.getHttpServer())
-      .put('/cats')
-      .send(mockData)
-      .set('Accept', 'application/json');
+      .put(`/cats/${mockData.id}`)
+      .set('Accept', 'application/json')
+      .send(mockData);
+    expect(response.status).toEqual(200);
+  });
+
+  it('Delete a cat', async () => {
+    const mockData = {
+      id: '62270f803538f9c7bc642d07',
+    };
+    const response = await request(app.getHttpServer())
+      .delete(`/cats/${mockData.id}`)
+      .send(mockData);
     expect(response.status).toEqual(200);
   });
 });

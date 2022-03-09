@@ -1,33 +1,35 @@
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BaseService } from '../base/base.service';
-import { Cat } from './schemas/cat.schema';
-import { CreateCatDto } from './dto/create-cat.dto';
+import { CatDto } from './dto/cat.dto';
+import { CatDoc } from './schemas/cat.schema';
 
 @Injectable()
-export class CatsService extends BaseService<Cat, CreateCatDto> {
-  constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {
+export class CatsService extends BaseService<CatDoc, CatDto> {
+  constructor(
+    @InjectModel(CatDoc.name) private readonly catModel: Model<CatDoc>,
+  ) {
     super(catModel);
   }
 
-  async create(createCatDto: CreateCatDto): Promise<Cat> {
+  create(createCatDto: CatDto): Promise<CatDoc> {
     return super.create(createCatDto);
   }
 
-  findAll(): Promise<Cat[]> {
+  findAll(): Promise<CatDoc[]> {
     return super.findAll();
   }
 
-  async findOne(id: string): Promise<Cat> {
+  findOne(id: string): Promise<CatDoc> {
     return super.findOne(id);
   }
 
-  async delete(id: string): Promise<Cat> {
+  delete(id: string): Promise<CatDoc> {
     return super.delete(id);
   }
 
-  async update(dto: CreateCatDto): Promise<Cat> {
-    return super.update(dto);
+  update(id: string, entity: CatDto): Promise<CatDoc> {
+    return super.update(id, entity);
   }
 }

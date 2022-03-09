@@ -1,24 +1,23 @@
 import { Document, Model } from 'mongoose';
-import { BadGatewayException, Injectable } from '@nestjs/common';
-import { IBaseService } from './ibase.service';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 
 @Injectable()
-export class BaseService<T extends Document, P> implements IBaseService<T, P> {
-  constructor(private readonly baseModel: Model<T>) {}
+export abstract class BaseService<T extends Document, P> {
+  protected constructor(private readonly baseModel: Model<T>) {}
 
-  create(dto: P): Promise<T> {
+  create(entity: P): Promise<T> {
     try {
-      return this.baseModel.create(dto);
+      return this.baseModel.create(entity);
     } catch (error) {
-      throw new BadGatewayException(error);
+      throw new InternalServerErrorException(error);
     }
   }
 
   delete(id: string): Promise<T> {
     try {
-      return this.baseModel.findByIdAndRemove({ _id: id }).exec();
+      return this.baseModel.findByIdAndDelete(id).exec();
     } catch (error) {
-      throw new BadGatewayException(error);
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -26,24 +25,34 @@ export class BaseService<T extends Document, P> implements IBaseService<T, P> {
     try {
       return this.baseModel.find().exec();
     } catch (error) {
-      throw new BadGatewayException(error);
+      throw new InternalServerErrorException(error);
     }
   }
 
   findOne(id: string): Promise<T> {
     try {
-      return this.baseModel.findOne({ _id: id }).select('-__v').exec();
+      return this.baseModel.findById(id).exec();
     } catch (error) {
-      throw new BadGatewayException(error);
+      throw new InternalServerErrorException(error);
     }
   }
 
-  async update(dto: any): Promise<T> {
+  async findSome1() {
     try {
-      const { id, ...rest } = dto;
-      return this.baseModel.findByIdAndUpdate(id, rest);
+      return await this.baseModel.find({}, { _id: 0 }).exec();
     } catch (error) {
-      throw new BadGatewayException(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  update(id: string, entity: P): Promise<T> {
+    try {
+      return this.baseModel
+        .findByIdAndUpdate(id, entity)
+        .setOptions({ new: true })
+        .exec();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
   }
 }

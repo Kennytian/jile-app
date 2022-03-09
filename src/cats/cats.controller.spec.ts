@@ -1,19 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CatsController } from './cats.controller';
-import { CreateCatDto } from './dto/create-cat.dto';
+import { CatDto } from './dto/cat.dto';
 import { CatsService } from './cats.service';
-import { Cat } from './schemas/cat.schema';
+import { CatDoc } from './schemas/cat.schema';
 
 describe('Cats Controller', () => {
   let controller: CatsController;
   let service: CatsService;
-  const createCatDto: CreateCatDto = {
+  const createCatDto: CatDto = {
     name: 'Cat #1',
     breed: 'Breed #1',
     age: 4,
   };
 
-  const mockCat: Pick<Cat, 'name' | 'breed' | 'age' | '_id'> = {
+  const mockCat: Pick<CatDoc, 'name' | 'breed' | 'age' | '_id'> = {
     name: 'Cat #1',
     breed: 'Breed #1',
     age: 4,
@@ -58,7 +58,7 @@ describe('Cats Controller', () => {
     it('should create a new cat', async () => {
       const createSpy = jest
         .spyOn(service, 'create')
-        .mockResolvedValueOnce(mockCat as Cat);
+        .mockResolvedValueOnce(mockCat as CatDoc);
 
       await controller.create(createCatDto);
       expect(createSpy).toHaveBeenCalledWith(createCatDto);

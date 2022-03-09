@@ -1,8 +1,8 @@
 import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema({ versionKey: false, timestamps: true })
-export class Cat extends Document {
+@Schema({ collection: 'cat', versionKey: false, timestamps: true })
+export class CatDoc extends Document {
   @Prop({ required: true })
   name: string;
 
@@ -16,4 +16,4 @@ export class Cat extends Document {
   tags?: string[];
 }
 
-export const CatSchema = SchemaFactory.createForClass(Cat);
+export const CatSchema = SchemaFactory.createForClass(CatDoc);
