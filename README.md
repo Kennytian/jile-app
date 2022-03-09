@@ -1,5 +1,56 @@
 ## Jile App starter with Nestjs + Docker + MongoDB
 
+### Project structure
+`tree -L 4 -a -I 'node_modules|test_*|dist|.idea|.git'`
+```
+├── .eslintrc.js
+├── .gitignore
+├── .prettierrc
+├── README.md
+├── docker-compose.yaml
+├── nest-cli.json
+├── package.json
+├── pnpm-lock.yaml
+├── src
+│   ├── app
+│   │   ├── app.controller.spec.ts
+│   │   ├── app.controller.ts
+│   │   ├── app.module.ts
+│   │   └── app.service.ts
+│   ├── base
+│   │   ├── base.controller.ts
+│   │   └── base.service.ts
+│   ├── cats
+│   │   ├── cats.controller.spec.ts
+│   │   ├── cats.controller.ts
+│   │   ├── cats.module.ts
+│   │   ├── cats.service.spec.ts
+│   │   ├── cats.service.ts
+│   │   ├── dto
+│   │   │   └── cat.dto.ts
+│   │   └── schemas
+│   │       └── cat.schema.ts
+│   ├── main.ts
+│   ├── post
+│   │   ├── dto
+│   │   │   └── post.dto.ts
+│   │   ├── posts.controller.ts
+│   │   ├── posts.module.ts
+│   │   ├── posts.service.ts
+│   │   └── schemas
+│   │       └── post.schema.ts
+│   └── utils
+│       └── params-with-id.ts
+├── test
+│   ├── app.e2e-spec.ts
+│   ├── cats.e2e-spec.ts
+│   ├── jest-e2e.json
+│   └── posts.e2e-spec.ts
+├── tsconfig.build.json
+└── tsconfig.json
+```
+
+
 ### Generate the database instance
 ```bash
 docker-compose up -d
