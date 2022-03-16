@@ -50,10 +50,11 @@
 └── tsconfig.json
 ```
 
-
 ### Generate the database instance
 ```bash
 docker-compose up -d
+
+docker-compose exec mongo mongo --eval "rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'localhost:27017'}]});"
 ```
 
 ### Installation project dependencies
@@ -152,3 +153,8 @@ Tests:       2 skipped, 1 passed, 3 total
 Snapshots:   0 total
 Time:        1.673 s, estimated 2 s
 ```
+
+### Troubleshooting
+- https://www.prisma.io/docs/concepts/database-connectors/mongodb#troubleshooting
+- https://github.com/prisma/prisma/issues/8266#issuecomment-966618742
+- https://hub.docker.com/r/prismagraphql/mongo-single-replica/tags

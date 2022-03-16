@@ -1,0 +1,38 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["mongoDb"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model cat {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  age       Int
+  breed     String
+  createdAt DateTime @db.Date @map("created_at")
+  name      String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  tags      Json?
+  updatedAt DateTime @db.Date @map("updated_at")
+}
+
+model post {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  title     String
+  userId    String    @db.ObjectId
+  user      user      @relation(fields:[userId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model user {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  email     String     @unique
+  posts     post[]
+  createdAt DateTime?  @default(now())
+  updatedAt DateTime?  @updatedAt
+}

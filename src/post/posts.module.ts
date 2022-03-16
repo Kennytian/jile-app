@@ -5,9 +5,7 @@ import { PostsController } from './posts.controller';
 import { PostsService } from './posts.service';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: PostDoc.name, schema: PostSchema }]),
-  ],
+  imports: [MongooseModule.forFeature([{ name: PostDoc.name, schema: PostSchema }])],
   controllers: [PostsController],
   providers: [PostsService],
 })
