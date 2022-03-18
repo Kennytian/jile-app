@@ -18,9 +18,9 @@ export class UserService {
     cursor?: Prisma.userWhereUniqueInput;
     where?: Prisma.userWhereInput;
     orderBy?: Prisma.userOrderByWithRelationInput;
-  }): Promise<User[]> {
-    const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.user.findMany({ skip, take, cursor, where, orderBy });
+  }): Promise<[User[], number]> {
+    const { where } = params;
+    return this.prisma.$transaction([this.prisma.user.findMany(params), this.prisma.user.count({ where })]);
   }
 
   // create

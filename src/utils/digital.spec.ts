@@ -26,7 +26,7 @@ describe('getTake tests', () => {
   });
 
   test('test "" number should be number', () => {
-    expect(getTake('', 5)).toBe(5);
+    expect(getTake('')).toBe(10);
   });
 });
 

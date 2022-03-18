@@ -1,52 +1,108 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Response } from 'express';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
 import { Prisma, user as UserModel } from '@prisma/client';
-import { UserService } from './user.service';
 import { getSkip, getTake } from '../utils/digital';
+import { RespCatch, RespError, RespOK } from '../utils/resp';
+import { UserDto, createUserCheck, idCheck, manyUserCheck } from './dto/user.dto';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  createUser(@Body() data: { email: string }): Promise<UserModel> {
-    return this.userService.createUser(data);
+  async createUser(@Body() input: Prisma.userCreateInput, @Res() res: Response) {
+    const [error] = createUserCheck.validate(input);
+    if (error) {
+      return RespError(res, null, error.message);
+    }
+
+    try {
+      const result = await this.userService.createUser(input);
+      RespOK(res, result);
+    } catch (e) {
+      RespCatch(res, e);
+    }
   }
 
   @Get()
-  users(): Promise<UserModel[]> {
-    return this.userService.users({});
+  async users(@Res() res: Response) {
+    try {
+      const [result, total] = await this.userService.users({});
+      RespOK(res, result, '', total);
+    } catch (e) {
+      RespCatch(res, e);
+    }
   }
 
   @Get(':id')
-  user(@Param('id') id: string): Promise<UserModel> {
-    return this.userService.user({ id });
+  async user(@Param('id') id: string, @Res() res: Response) {
+    const [error] = idCheck.validate({ id });
+    if (error) {
+      return RespError(res, null, error.message);
+    }
+
+    try {
+      const result = await this.userService.user({ id });
+      RespOK(res, result);
+    } catch (e) {
+      RespCatch(res, e);
+    }
   }
 
   @Post('many')
-  manyUser(@Body() data): Promise<UserModel[]> {
-    const { id, email, updatedAt, index, size } = data;
+  async manyUser(@Body() data: UserDto & UserModel, @Res() res: Response) {
+    const [error] = manyUserCheck.validate(data);
+    if (error) {
+      return RespError(res, null, error.message);
+    }
 
-    const where: Prisma.userWhereInput = {};
-    if (id) where.id = { equals: id };
-    if (email) where.email = { contains: email };
-    if (updatedAt) where.updatedAt = { gte: updatedAt };
+    try {
+      const { id, name, email, updatedAt, index, size } = data;
 
-    const orderBy: Prisma.userOrderByWithRelationInput = {
-      email: 'asc',
-    };
+      const where: Prisma.userWhereInput = {};
+      if (id) where.id = { equals: id };
+      if (name) where.name = { contains: name };
+      if (email) where.email = { equals: email };
+      if (updatedAt) where.updatedAt = { gte: updatedAt };
 
-    const params = { where, orderBy, skip: getSkip(index, getTake(size)), take: getTake(size) };
-
-    return this.userService.users(params);
+      const orderBy: Prisma.userOrderByWithRelationInput = { email: 'asc' };
+      const params = { where, orderBy, skip: getSkip(index, getTake(size)), take: getTake(size) };
+      const [result, total] = await this.userService.users(params);
+      RespOK(res, result, '', total);
+    } catch (e) {
+      RespCatch(res, e);
+    }
   }
 
   @Put(':id')
-  updateUser(@Param('id') id: string, @Body() data: UserModel): Promise<UserModel> {
-    return this.userService.updateUser({ where: { id }, data });
+  async updateUser(@Param('id') id: string, @Body() data: UserModel, @Res() res: Response) {
+    const [error] = idCheck.validate({ id });
+    if (error) {
+      return RespError(res, null, error.message);
+    }
+
+    try {
+      const result = await this.userService.updateUser({ where: { id }, data });
+      RespOK(res, result);
+    } catch (e) {
+      RespCatch(res, e);
+    }
   }
 
   @Delete(':id')
-  deleteUser(@Param('id') id: string): Promise<UserModel> {
-    return this.userService.deleteUser({ id });
+  async deleteUser(@Param('id') id: string, @Res() res: Response) {
+    const [error] = idCheck.validate({ id });
+    if (error) {
+      return res.send({ code: HttpStatus.BAD_REQUEST, message: error.message, data: null });
+    }
+
+    try {
+      const result = await this.userService.deleteUser({ id });
+      res.send({ code: HttpStatus.OK, message: 'success', data: result });
+    } catch (e) {
+      console.error(e?.meta?.cause);
+      RespCatch(res, e);
+    }
   }
 }
