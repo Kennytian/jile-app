@@ -1,8 +1,6 @@
-import { IsNotEmpty } from 'class-validator';
 const Schema = require('validate');
 
 export class UserDto {
-  @IsNotEmpty()
   index: string | number;
 
   size: number;

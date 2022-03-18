@@ -29,11 +29,7 @@ export abstract class BaseController<T extends Document, P> {
   }
 
   @Put(':id')
-  async update(
-    @Param() { id }: ParamsWithId,
-    @Body() dto: P,
-    @Res() res: Response,
-  ) {
+  async update(@Param() { id }: ParamsWithId, @Body() dto: P, @Res() res: Response) {
     const result = await this.service.update(id, dto);
     res.send(result ?? {});
   }

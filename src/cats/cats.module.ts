@@ -5,9 +5,7 @@ import { CatsService } from './cats.service';
 import { CatsController } from './cats.controller';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: CatDoc.name, schema: CatSchema }]),
-  ],
+  imports: [MongooseModule.forFeature([{ name: CatDoc.name, schema: CatSchema }])],
   controllers: [CatsController],
   providers: [CatsService],
 })

@@ -7,9 +7,7 @@ import { CatDoc } from './schemas/cat.schema';
 
 @Injectable()
 export class CatsService extends BaseService<CatDoc, CatDto> {
-  constructor(
-    @InjectModel(CatDoc.name) private readonly catModel: Model<CatDoc>,
-  ) {
+  constructor(@InjectModel(CatDoc.name) private readonly catModel: Model<CatDoc>) {
     super(catModel);
   }
 

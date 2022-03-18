@@ -39,10 +39,7 @@ export abstract class BaseService<T extends Document, P> {
 
   update(id: string, entity: P): Promise<T> {
     try {
-      return this.baseModel
-        .findByIdAndUpdate(id, entity)
-        .setOptions({ new: true })
-        .exec();
+      return this.baseModel.findByIdAndUpdate(id, entity).setOptions({ new: true }).exec();
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
