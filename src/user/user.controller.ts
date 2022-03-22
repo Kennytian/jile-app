@@ -1,15 +1,18 @@
 import { Response } from 'express';
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Prisma, user as UserModel } from '@prisma/client';
 import { getSkip, getTake } from '../utils/digital';
 import { RespCatch, RespError, RespOK } from '../utils/resp';
 import { UserDto, createUserCheck, idCheck, manyUserCheck } from './dto/user.dto';
 import { UserService } from './user.service';
 
+@ApiTags('无需验证接口Auth')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiOperation({ summary: '创建用户' })
   @Post()
   async createUser(@Body() input: Prisma.userCreateInput, @Res() res: Response) {
     const [error] = createUserCheck.validate(input);
